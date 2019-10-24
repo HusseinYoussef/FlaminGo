@@ -11,7 +11,7 @@ public:
 
     // for given move on state, return true if not legal nor suicidal
     bool isValidMove(State state, Move move);
-    std::vector<Move> getValidMoves(State state);
+    std::vector<Move> getValidMoves(State state,COLOUR nextColourToPlay );
     Score computeScore(State state);
     ~GoEngine();
 };

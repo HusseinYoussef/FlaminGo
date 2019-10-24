@@ -11,7 +11,7 @@ private:
 public:
     // construct with point played
     Move(int x, int y);
-
+    bool set_Move(int x,int y);
     // construct with pass move
     Move();
 

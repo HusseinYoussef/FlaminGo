@@ -4,6 +4,8 @@
 #include<vector>
 #include <utility>
 
+#define MATRIX_DIMENSION 19
+
 // TODO Matrix should be template so that, Matrix in State be "Matrix<CELL_STATE>"
 typedef std::vector< std::vector<int> > Matrix;
 typedef std::pair<int, int> pii;

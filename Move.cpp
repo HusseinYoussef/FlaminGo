@@ -2,6 +2,7 @@
 Represents the player move
 */
 #include "Move.h"
+#include"definitions.h"
 
 Move::Move(int x, int y)
 {
@@ -18,6 +19,15 @@ Move::Move()
 bool Move::isPass()
 {
     return x == -1  && y == -1;
+}
+
+bool Move::set_Move(int x,int y){
+    if(x<MATRIX_DIMENSION && y<MATRIX_DIMENSION){
+        this ->x=x;
+        this ->y=y;
+        return true;
+    }
+    return false;
 }
 
 Move::~Move()
