@@ -23,6 +23,10 @@ enum CELL_STATE {
     EMPTY = 0,
     WHITE = 1,
     BLACK = -1,
-}
+};
+enum COLOUR{
+    WHITE=1,
+    BLACK=-1
+};
 
 #endif
