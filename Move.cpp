@@ -29,6 +29,13 @@ bool Move::set_Move(int x,int y){
     }
     return false;
 }
+std::pair<int,int> Move:: getMove(){
+    return std::pair(x,y);
+}
+COLOUR Move:: getColour(){
+    return this->moveColour;
+}
+
 
 Move::~Move()
 {

@@ -85,6 +85,25 @@ int checkTerritory(int x,int y,const State &state){
 }
 
 bool GoEngine::isValidMove(State state, Move move) {
+    // occupied point
+    /*if (state(pxy(move)) != int(CellState::EMPTY)) return false;
+    if (!isOnBoard(move.p)) return false;
+    if (move.isPass()) return true;
+    
+    int numCaptured = updateState_removeCaptures(&state, move);
+    if (numCaptured > 0) {
+      return isSameState(state);
+    }*/
+
+}
+bool GoEngine::isKo(State currentState,State prevState){
+    for(int i=0;i<MATRIX_DIMENSION;i++){
+        for(int j=0;j<MATRIX_DIMENSION;j++){
+            if(currentState[i][j]==prevState[i][j])
+                return true;
+        }
+    }
+    return false;
 
 }
 

@@ -14,5 +14,6 @@ public:
     std::vector<Move> getValidMoves(State state,COLOUR nextColourToPlay );
     Score computeScore(State state);
     int checkTerritory(int x,int y);
+    bool isKo(State currentState,State prevState);
     ~GoEngine();
 };

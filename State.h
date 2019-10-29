@@ -1,5 +1,5 @@
 #include "definitions.h"
-
+#include"Move.h"
 
 class State : public Matrix
 {
