@@ -2,41 +2,41 @@
 Represents the player move
 */
 #include "Move.h"
-#include"definitions.h"
+#include "definitions.h"
 
-Move::Move(int x, int y)
+Move::Move(CellState player, int x, int y) : p(x, y)
 {
-    this->x = x;
-    this->y = y;
+    this->player = player;
 }
 
-Move::Move()
+Move::Move(CellState color) : p(-1, -1)
 {
-    this->x = -1;
-    this->y = -1;
+    this->player = color;
 }
 
 bool Move::isPass()
 {
-    return x == -1  && y == -1;
+    return p.x == -1 && p.y == -1;
 }
 
-bool Move::set_Move(int x,int y){
-    if(x<MATRIX_DIMENSION && y<MATRIX_DIMENSION){
-        this ->x=x;
-        this ->y=y;
+bool Move::set_Move(int x, int y)
+{
+    if (x < BOARD_DIMENSION && y < BOARD_DIMENSION)
+    {
+        this->p.x = x;
+        this->p.y = y;
         return true;
     }
     return false;
 }
-std::pair<int,int> Move:: getMove(){
-    return std::pair(x,y);
+Point Move::getMove()
+{
+    return this->p;
 }
-COLOUR Move:: getColour(){
-    return this->moveColour;
+CellState Move::getColour()
+{
+    return this->player;
 }
-
-
 Move::~Move()
 {
 }
