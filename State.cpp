@@ -1,9 +1,8 @@
-/*
-Represents the Go game state
-*/
+/* Represents the Go game state */
+#pragma once
+#include "definitions.h"
 #include "State.h"
-#include <exception>
-#include<iostream>
+
 State::State(const Board & m): Board(m)
 {
   init();
@@ -55,6 +54,26 @@ void State::init(){
     this ->capturedStones.black=0;
 }
 
-State::~State()
+// TODO : Link This functions with the game engine.
+bool State::is_terminal() const                       // check if this state is terminal state or not. (e.g. end of the game).
 {
+
 }
+bool State::get_random_action(Action& action)        // return false if no action found.
+{
+
+}
+result State::evalute()                              // return if WIN or LOSE - with respect to the AI.
+{
+
+}
+void State::get_actions(vector<Action>& actions)     // Add all possible actions to the passed vector.
+{
+
+}
+void State::apply_action(Action action)             // apply certain action to this state.
+{
+
+}
+
+State::~State() {}

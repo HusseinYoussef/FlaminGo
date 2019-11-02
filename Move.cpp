@@ -1,8 +1,7 @@
-/* 
-Represents the player move
-*/
-#include "Move.h"
+/* Represents the player move*/
+#pragma once
 #include "definitions.h"
+#include "Move.h"
 
 Move::Move(CellState player, int x, int y) : p(x, y)
 {
@@ -13,6 +12,7 @@ Move::Move(CellState color) : p(-1, -1)
 {
     this->player = color;
 }
+Move::Move() {}
 
 bool Move::isPass()
 {

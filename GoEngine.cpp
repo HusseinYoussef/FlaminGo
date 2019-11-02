@@ -1,7 +1,7 @@
+#pragma once
+#include "definitions.h"
 #include "GoEngine.h"
-#include<iostream>
 
-#include "Point.h"
 #define right(s, m) s(m.x + 1, m.y)
 #define xy(m) m.x, m.y
 #define pxy(m) m.p.x, m.p.y

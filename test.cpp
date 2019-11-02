@@ -1,4 +1,5 @@
-#include <iostream>
+#pragma once
+#include "definitions.h"
 #include "GoEngine.h"
 using namespace std;
 void test1();
@@ -45,7 +46,7 @@ void test1(){
     //     }
     //     cout << endl;
     // }
-    
+
     s = engine.computeScore(state);
     cout << "black score = " << s.black << ", white score = " << s.white << endl;
 }

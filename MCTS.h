@@ -1,22 +1,16 @@
 #pragma once
-
-#include <cfloat>
+#include "definitions.h"
+#include "Node.h"
+#include "State.h"
+#include "Action.h"
 #include <vector>
-
-#define TreeNode int
-
-enum result
-{
-    WIN = 1,
-    LOSE = 0
-};
-
 // Monte Carlo Tree Search class
 class MCTS
 {
 private:
     // LoopTimer timer;
     int iterations;
+    float Policy(Node*,Node*);  //the policy of calculating the score of node.
 
 
 public:
@@ -30,22 +24,13 @@ public:
     // TODO
     // const LoopTimer & get_timer() const;
     int get_iterations() const;
-    TreeNode* get_best_child(TreeNode*, float) const;
-    TreeNode* get_most_visited_child(TreeNode*) const;
-    TreeNode* Select(TreeNode*) const;
-    TreeNode* Expand(TreeNode*) const;
-    result Simulate(State state) const;
-    void Propagate(TreeNode*, float) const;
-    Action run(const State&, int, vector(State)*);
+    Node* get_best_child(Node*, float);
+    Node* get_most_visited_child(Node*);
+    Node* Select(Node*);
+    Node* Expand(Node*);
+    result Simulate(State state);
+    void Propagate(Node*, result);
+    Action run(State&, int);
 
     ~MCTS();
 };
-
-MCTS::MCTS()
-{
-}
-
-MCTS::~MCTS()
-{
-}
-

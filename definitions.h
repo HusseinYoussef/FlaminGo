@@ -1,8 +1,15 @@
-#ifndef DEFINITIONS_HEADER_
-#define DEFINITIONS_HEADER_
+#pragma once
 
-#include<vector>
+#include <iostream>
+#include <vector>
 #include <utility>
+#include <stack>
+#include <memory>
+#include <math.h>
+#include <algorithm>
+#include <initializer_list>
+
+
 
 #define BOARD_DIMENSION 13
 #define KOMI_VALUE 6.5
@@ -22,9 +29,23 @@ enum CellState {
     BLACK = -1,
 };
 
+enum result
+{
+    WIN = 1,
+    LOSE = 0
+};
+
+enum Player
+{
+    AI_AGENT = 1,
+    OPPONENT = 0
+};
+
+
 struct Score : public WhiteBlack
 {
     Score(int whiteScore, int blackScore) : WhiteBlack(whiteScore+KOMI_VALUE, blackScore) {}
+
 };
 
 
@@ -35,5 +56,3 @@ typedef std::pair<int, int> pii;
 typedef std::vector< std::vector<CellState> > Board;
 typedef std::vector< std::vector<bool> > Matrix;
 typedef WhiteBlack CapturedStones;
-
-#endif

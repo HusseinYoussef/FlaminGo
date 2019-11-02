@@ -1,10 +1,7 @@
-#ifndef GO_ENGINE_H_
-#define GO_ENGINE_H_
-
+#pragma once
 #include "definitions.h"
+#include "Point.h"
 #include "State.h"
-#include "Move.h"
-#include <stack>
 
 typedef std::pair<bool, CellState> Territory;
 typedef std::vector<Territory> TerritoryRow;
@@ -28,13 +25,10 @@ public:
     std::vector<Move> getValidMoves(State state,CellState nextColourToPlay );
     Score computeScore(State state);
     void checkTerritory(int x, int y, const State &state, TerritoryMat& territories);
-    bool isSelfCapture(const State& state, Point point, CellState color);    
+    bool isSelfCapture(const State& state, Point point, CellState color);
     int removeCaptured(State & state,Point point,CellState color); // take the player stone's color
     bool isKo(const State& currentState,const State& prevState);
     bool isGoal(const State &currentState, Move currentMove, Move prevMove);
     std::vector<Move> getValidMoves(State state,State prevState,CellState nextColourToPlay);
     ~GoEngine();
 };
-
-
-#endif // GO_ENGINE_H_

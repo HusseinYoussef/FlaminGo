@@ -1,10 +1,7 @@
-/* 
-Represents the player move
-*/
-#ifndef MOVE_HEADER_H_
-#define MOVE_HEADER_H_
-#include "Point.h"
+/* Represents the player move */
+#pragma once
 #include "definitions.h"
+#include "Point.h"
 
 class Move
 {
@@ -12,7 +9,7 @@ private:
 public:
     Point p;
     CellState player;
-    
+
     Move(); // default constructor
     // construct with point played
     Move(CellState player, int x, int y);
@@ -24,7 +21,3 @@ public:
     bool isPass();
     ~Move();
 };
-
-
-#endif
-

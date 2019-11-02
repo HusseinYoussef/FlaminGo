@@ -4,11 +4,16 @@
   the agent take this move and convert it to action with some additional features.
 - for now, the action is just a move
 */
+#pragma once
+#include "definitions.h"
 #include "Action.h"
+#include "Move.h"
 
 Action::Action(Move m) : Move(m)
 {
 }
+
+Action::Action() {}
 
 Action::~Action()
 {

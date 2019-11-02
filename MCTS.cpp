@@ -1,6 +1,7 @@
+#pragma once
+#include "definitions.h"
 #include "MCTS.h"
-#include "math.h"
-
+#include "assert.h"
 //TODO: Tune the values
 MCTS :: MCTS()
 {
@@ -16,8 +17,17 @@ int MCTS :: get_iterations() const
     return iterations;
 }
 
+float MCTS::Policy(Node* node,Node* child)
+{
+    // (wk / nk) + C * sqrt(ln(n par) / nk)
+    float ucb_exploitation = (float)child->get_wins() / child->get_num_visits();
+    float ucb_exploration = sqrt(log(node->get_num_visits()) / child->get_num_visits());
+    float ucb_score = ucb_exploitation + UCB1_C * ucb_exploration;
+    return ucb_score;
+}
+
 // get best child for given node based on UCB score
-TreeNode* MCTS :: get_best_child(TreeNode* node, float ucb_c) const
+Node* MCTS :: get_best_child(Node* node, float ucb_c)
 {
     // The node should be fully expanded (generated all its child) to choose among them
     if(!node->is_fully_expanded())
@@ -26,16 +36,13 @@ TreeNode* MCTS :: get_best_child(TreeNode* node, float ucb_c) const
     }
 
     float best_ucb_score = -1;
-    TreeNode* best_node = NULL;
+    Node* best_node = NULL;
 
     int num_children = node->get_num_children();
     for(int i = 0; i < num_children; ++i)
     {
-        TreeNode* child = node->get_child(i);
-        // (wk / nk) + C * sqrt(ln(n par) / nk)
-        float ucb_exploitation = (float)child->get_value() / child->get_num_visits();
-        float ucb_exploration = sqrt(log(node->get_num_visits()) / child->get_num_visits());
-        float ucb_score = ucb_exploitation + UCB1_C * ucb_exploration;
+        Node* child = node->get_child(i);
+        float ucb_score = Policy(node, child);
 
         if(ucb_score > best_ucb_score)
         {
@@ -47,15 +54,15 @@ TreeNode* MCTS :: get_best_child(TreeNode* node, float ucb_c) const
     return best_node;
 }
 
-TreeNode* MCTS :: get_most_visited_child(TreeNode* node) const
+Node* MCTS :: get_most_visited_child(Node* node)
 {
     int most_visits = -1;
-    TreeNode* best_node = NULL;
+    Node* best_node = NULL;
 
     int num_childs = node->get_num_children();
     for(int i = 0; i<num_childs; ++i)
     {
-        TreeNode* child = node->get_child(i);
+        Node* child = node->get_child(i);
         if(child->get_num_visits() > most_visits)
         {
             most_visits = child->get_num_visits();
@@ -67,7 +74,7 @@ TreeNode* MCTS :: get_most_visited_child(TreeNode* node) const
 }
 
 // Descend, return node with best score
-TreeNode* MCTS :: Select(TreeNode* node) const
+Node* MCTS :: Select(Node* node)
 {
     while(!node->is_terminal() && node->is_fully_expanded())
     {
@@ -77,7 +84,7 @@ TreeNode* MCTS :: Select(TreeNode* node) const
 }
 
 // Expand, Expand by adding single child (if not terminal or not fully expanded)
-TreeNode* MCTS :: Expand(TreeNode* node) const
+Node* MCTS :: Expand(Node* node)
 {
     if(!node->is_fully_expanded() && !node->is_terminal())
     {
@@ -87,9 +94,9 @@ TreeNode* MCTS :: Expand(TreeNode* node) const
 }
 
 //Simulate, Apply random actions till the game ends(win or lose)
-result MCTS :: Simulate(State state) const
+result MCTS :: Simulate(State state)
 {
-    if(!node->is_terminal())
+    if(!state.is_terminal())
     {
         Action action;
         for(int d = 0; d < simulation_depth; ++d)
@@ -109,62 +116,64 @@ result MCTS :: Simulate(State state) const
             }
         }
     }
-
-    float reward = state.evalute();
-    
-    if(reward)
+    /*
+    //This Part is valid in case no actions = terminal state.
+    int counter = simulation_depth;
+    while(!state.is_terminal() && counter-- )
     {
-        return WIN;
+        Action action;
+        state.get_random_action(action)
+        state.apply_action(action);
     }
-    return LOSE;
+    */
+
+    return state.evalute();     // WIN or LOSE.
 }
 
 //Back Propagation, Update the path of hte node
-void MCTS :: Propagate(TreeNode* node, float reward) const
+void MCTS :: Propagate(Node* node, result reward)
 {
     while(node)
     {
+        reward = (reward == WIN? LOSE:WIN); // Toggle the state.
         node->update(reward);
         node = node->get_parent();
     }
 }
 
-Action MCTS :: run(const State& current_state, int seed = 1, vector<State>* explored_states = NULL)
+Action MCTS :: run( State& current_state, int seed = 1)
 {
-    timer.init();
+    //timer.init();
 
-    TreeNode root_node(current_state);
+    Node root_node(current_state,NULL);
 
-    TreeNode* best_node = NULL;
+    Node* best_node = NULL;
     iterations = 0;
 
     while(true)
     {
-        timer.loop_start();
+        //timer.loop_start();
 
         // 1. SELECT
-        TreeNode* node = Select(&root_node);
+        Node* node = Select(&root_node);
 
         // 2. Expand
         node = Expand(node);
 
         State state(node->get_state());
-        
-        // 3. Simulate
-        float reward = Simulate(state);
 
-        if(explored_states)
-        {
-            explored_states->push_back(state);
-        }
+        // 3. Simulate
+        result reward = Simulate(state);
+
+        //if(explored_states) explored_states->push_back(state);
 
         // 4. BACK PROPAGATION
         Propagate(node, reward);
 
         best_node = get_most_visited_child(&root_node);
 
-        timer.loop_end();
-        if(max_millis > 0 && timer.check_duration(max_millis)) break;
+        //timer.loop_end();
+        //if(max_millis > 0 && timer.check_duration(max_millis)) break;
 
         // exit loop if current iterations exceeds max_iterations
         if(max_iterations > 0 && iterations > max_iterations) break;
@@ -172,11 +181,12 @@ Action MCTS :: run(const State& current_state, int seed = 1, vector<State>* expl
     }
 
     // Return the action to the best node
-    if(best_node) 
+    if(best_node)
     {
         return best_node->get_action();
     }
-
+    // You shouldn't be here.
+    assert(!"No best action found");
     return Action();
 }
 
