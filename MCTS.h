@@ -5,6 +5,12 @@
 
 #define TreeNode int
 
+enum result
+{
+    WIN = 1,
+    LOSE = 0
+};
+
 // Monte Carlo Tree Search class
 class MCTS
 {
@@ -27,6 +33,9 @@ public:
     TreeNode* get_best_child(TreeNode*, float) const;
     TreeNode* get_most_visited_child(TreeNode*) const;
     TreeNode* Select(TreeNode*) const;
+    TreeNode* Expand(TreeNode*) const;
+    result Simulate(State state) const;
+    void Propagate(TreeNode*, float) const;
     Action run(const State&, int, vector(State)*);
 
     ~MCTS();
