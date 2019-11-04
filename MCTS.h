@@ -1,17 +1,19 @@
 #pragma once
+
 #include "definitions.h"
 #include "Node.h"
+#include "LoopTimer.h"
 #include "State.h"
 #include "Action.h"
 #include <vector>
+
 // Monte Carlo Tree Search class
 class MCTS
 {
 private:
-    // LoopTimer timer;
+    LoopTimer timer;
     int iterations;
     float Policy(Node*,Node*);  //the policy of calculating the score of node.
-
 
 public:
 
@@ -21,8 +23,7 @@ public:
     int simulation_depth;   // max depth to run simulation
 
     MCTS();
-    // TODO
-    // const LoopTimer & get_timer() const;
+    //const LoopTimer& get_timer() const;
     int get_iterations() const;
     Node* get_best_child(Node*, float);
     Node* get_most_visited_child(Node*);

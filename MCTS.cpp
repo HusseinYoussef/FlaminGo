@@ -1,15 +1,16 @@
 #pragma once
+
 #include "definitions.h"
 #include "MCTS.h"
 #include "assert.h"
-//TODO: Tune the values
+
 MCTS :: MCTS()
 {
     iterations = 0;
     UCB1_C = sqrt(2);
-    max_iterations = 0;
+    max_iterations = 100;
     max_millis = 0;
-    simulation_depth = 0;
+    simulation_depth = 100;
 }
 
 int MCTS :: get_iterations() const
@@ -143,16 +144,16 @@ void MCTS :: Propagate(Node* node, result reward)
 
 Action MCTS :: run( State& current_state, int seed = 1)
 {
-    //timer.init();
+    timer.init();
 
-    Node root_node(current_state,NULL);
+    Node root_node(current_state, NULL);
 
     Node* best_node = NULL;
     iterations = 0;
 
     while(true)
     {
-        //timer.loop_start();
+        timer.loop_start();
 
         // 1. SELECT
         Node* node = Select(&root_node);
@@ -172,8 +173,8 @@ Action MCTS :: run( State& current_state, int seed = 1)
 
         best_node = get_most_visited_child(&root_node);
 
-        //timer.loop_end();
-        //if(max_millis > 0 && timer.check_duration(max_millis)) break;
+        timer.loop_end();
+        if(max_millis > 0 && timer.check_duration(max_millis)) break;
 
         // exit loop if current iterations exceeds max_iterations
         if(max_iterations > 0 && iterations > max_iterations) break;
@@ -185,6 +186,7 @@ Action MCTS :: run( State& current_state, int seed = 1)
     {
         return best_node->get_action();
     }
+
     // You shouldn't be here.
     assert(!"No best action found");
     return Action();
