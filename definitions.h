@@ -29,7 +29,7 @@ enum CellState {
     BLACK = -1,
 };
 
-enum result
+enum Result
 {
     WIN = 1,
     LOSE = 0

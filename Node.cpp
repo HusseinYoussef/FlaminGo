@@ -38,7 +38,7 @@ Node* Node::expand()
     return child;
 }
 
-void Node::update(result reward)
+void Node::update(Result reward)
 {
     wins+=(reward == WIN); // MIND BELOW.
     visits_count++;

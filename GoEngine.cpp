@@ -2,6 +2,8 @@
 #include "definitions.h"
 #include "GoEngine.h"
 
+#include<random>
+
 #define right(s, m) s(m.x + 1, m.y)
 #define xy(m) m.x, m.y
 #define pxy(m) m.p.x, m.p.y
@@ -175,7 +177,8 @@ bool GoEngine::isGoal(const State &currentState, Move currentMove, Move prevMove
   return true;
 }
 
-std::vector<Move> GoEngine::getValidMoves(State state,State prevState,CellState nextColourToPlay) {
+std::vector<Move> GoEngine::getValidMoves(const State *_state,const State* _prevState,CellState nextColourToPlay) {
+    const State &state = *_state, &prevState = *_prevState;
     std::vector<Move> validMoves;
     for(int i=0;i<BOARD_DIMENSION;i++){
         for(int j=0;j<BOARD_DIMENSION;j++){
@@ -184,6 +187,7 @@ std::vector<Move> GoEngine::getValidMoves(State state,State prevState,CellState 
                 validMoves.push_back(currentMove);
         }
     }
+    validMoves.push_back(Move()); // add the pass move
     return validMoves;
 }
 
@@ -275,19 +279,19 @@ int GoEngine::removeCaptured(State &state, Point point, CellState color)
 }
 
 // take action
-bool GoEngine::processMove(State& currentState, const State& prevState, Move currentMove){
-  if(currentState(currentMove.p.x, currentMove.p.y) != EMPTY) return false;
-  State nextState = currentState + currentMove;
-  int numCaptured = removeCaptured(nextState, currentMove.p, currentMove.getColour());
-  if(!isValidMove_stateUpdated(nextState, prevState, currentMove)) return false;
-  // checkTerritory(move.p.x, move.p.y, currentState);
-}
+// bool GoEngine::processMove(State& currentState, const State& prevState, Move currentMove){
+//   if(currentState(currentMove.p.x, currentMove.p.y) != EMPTY) return false;
+//   State nextState = currentState + currentMove;
+//   int numCaptured = removeCaptured(nextState, currentMove.p, currentMove.getColour());
+//   if(!isValidMove_stateUpdated(nextState, prevState, currentMove)) return false;
+//   // checkTerritory(move.p.x, move.p.y, currentState);
+// }
 
 Score GoEngine::computeScore(State state) {
-    int blackStones=0;
-    int whiteStones=0;
-    int blackTerr=0;
-    int whiteTerr=0;
+    int blackStones = 0;
+    int whiteStones = 0;
+    int blackTerr = 0;
+    int whiteTerr = 0;
     
     TerritoryMat territories(BOARD_DIMENSION, TerritoryRow(BOARD_DIMENSION, Territory(false, EMPTY))); //creates 19 * 19 vector and gives it an initial value
     // std::cout << "territories initialized\n";
@@ -314,7 +318,8 @@ Score GoEngine::computeScore(State state) {
         }
     }
     std::cout<<"territories[12][0]:"<<territories[12][0].first<<std::endl;
-    return Score(whiteStones + whiteTerr  , blackStones + blackTerr); // TODO: add captured
+    auto capturedStones = state.getCapturedstones();
+    return Score(whiteStones + whiteTerr + capturedStones.black , blackStones + blackTerr + capturedStones.white); // TODO: add captured
 }
 
 
@@ -323,6 +328,21 @@ Score GoEngine::computeScore(State state) {
     auto p = newVisited.top(); newVisited.pop();
     territories[p.x][p.y].second = territoryColor;
   }
+}
+
+
+bool GoEngine::getRandomAction(Action& result, const State* state, const State* prevState, CellState playerColor){
+    auto moves = getValidMoves(state, prevState, playerColor);
+    if(moves.empty()) return false;
+
+    // rand
+    std::random_device dev;
+    std::mt19937 rng(dev());
+    std::uniform_int_distribution<std::mt19937::result_type> distribution(0, moves.size()); // distribution in range [1, 6]
+    auto sample = distribution(rng);
+
+    result = moves[sample];
+    return true;
 }
 
 GoEngine::~GoEngine()

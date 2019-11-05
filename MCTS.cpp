@@ -95,8 +95,9 @@ Node* MCTS :: Expand(Node* node)
 }
 
 //Simulate, Apply random actions till the game ends(win or lose)
-result MCTS :: Simulate(State state,Action action,Action prev_action)
+Result MCTS :: Simulate(State state,Action action,Action prev_action)
 {
+    State prevState = state; // TODO, save the prev state so that you can able to get a random 'valid' move
     if(!engine.isGoal(state,action,prev_action))
     {
         for(int d = 0; d < simulation_depth; ++d)
@@ -105,8 +106,8 @@ result MCTS :: Simulate(State state,Action action,Action prev_action)
             {
                 break;
             }
-            prev_action = action
-            if(engine.get_random_action(action))
+            prev_action = action;
+            if(engine.getRandomAction(action, state, prevState)) // TODO: interface correct and send missing params
             {
                 state.apply_action(action);
             }
@@ -131,7 +132,7 @@ result MCTS :: Simulate(State state,Action action,Action prev_action)
 }
 
 //Back Propagation, Update the path of hte node
-void MCTS :: Propagate(Node* node, result reward)
+void MCTS :: Propagate(Node* node, Result reward)
 {
     while(node)
     {
@@ -163,7 +164,7 @@ Action MCTS :: run( State& current_state, int seed = 1)
         State state(node->get_state());
 
         // 3. Simulate
-        result reward = Simulate(state,node->get_action(),node->get_parent->get_action());
+        Result reward = Simulate(state,node->get_action(),node->get_parent->get_action());
 
         //if(explored_states) explored_states->push_back(state);
 

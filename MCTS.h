@@ -15,8 +15,10 @@ private:
     LoopTimer timer;
     int iterations;
     float Policy(Node*,Node*);  //the policy of calculating the score of node.
-    const GoEngine engine;
+    static GoEngine engine;
 
+    // helpers
+    bool get_random_action(Action&);        // return false if no action found.
 public:
 
     float UCB1_C;           // Value of C in UCB1 function: sqrt(2), 2, 1.5
@@ -31,8 +33,8 @@ public:
     Node* get_most_visited_child(Node*);
     Node* Select(Node*);
     Node* Expand(Node*);
-    result Simulate(State state, Action, Action);
-    void Propagate(Node*, result);
+    Result Simulate(State state, Action, Action);
+    void Propagate(Node*, Result);
     Action run(State&, int);
 
     ~MCTS();

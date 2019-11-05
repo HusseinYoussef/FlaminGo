@@ -13,6 +13,10 @@ State::State(): Board(BOARD_DIMENSION, std::vector<CellState>(BOARD_DIMENSION, C
     std::cout << "state constructed with empty state\n";
 }
 
+CapturedStones State::getCapturedstones(){
+  return capturedStones;
+}
+
 // State::State(const State& ref){
 //   std::cout << "copy const for state\n";
 //   std::cout << (*this)[0][11] << '\n';
@@ -29,13 +33,15 @@ State::State(): Board(BOARD_DIMENSION, std::vector<CellState>(BOARD_DIMENSION, C
 State State::operator+(Move m){
   if(m.isPass()) return (*this);
   State res(*this);
-  res(m.p.x, m.p.y) = m.getColour();
+  res(m.p.x, m.p.y) = m.getColour(); // TODO: update with state.nextPlayerToPlay
+  // res.nextPlayerToPlay = m.getColour() == BLACK ? WHITE : BLACK;
   return res;
 }
 
 State& State::operator+=(Move m){
   if(m.isPass()) return (*this);
   (*this)(m.p.x, m.p.y) = m.getColour();
+  // this->nextPlayerToPlay = m.getColour() == BLACK ? WHITE : BLACK;
   return *this;
 }
 
@@ -60,26 +66,14 @@ void State::init(){
     this ->capturedStones.black=0;
 }
 
-// TODO : Link This functions with the game engine.
-// bool State::is_terminal() const                       // check if this state is terminal state or not. (e.g. end of the game).
-// {
-
-// }
-// bool State::get_random_action(Action& action)        // return false if no action found.
-// {
-
-// }
-result State::evalute()                              // return if WIN or LOSE - with respect to the AI.
-{
-  
-}
-void State::get_actions(vector<Action>& actions)     // Add all possible actions to the passed vector.
-{
-
-}
 void State::apply_action(Action action)             // apply certain action to this state.
 {
   *this += action;
+}
+
+Result State::evalute()                              // return if WIN or LOSE - with respect to the AI.
+{
+  
 }
 
 State::~State() {}

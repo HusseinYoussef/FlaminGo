@@ -26,7 +26,7 @@ class Node
 
     Node(State&, Node*);
     Node* expand();                                 //adding a single child to this Node
-    void update(result);
+    void update(Result);
     //--------------
 
     // ------Getters
@@ -68,4 +68,4 @@ class Node
 This part will be instead of state.evaluate.
 Score score = engine.computeScore(currentState);
 return score.white > score.black ? (WIN)
-/*
+*/
