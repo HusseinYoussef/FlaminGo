@@ -2,19 +2,20 @@
 #pragma once
 #include "definitions.h"
 #include "State.h"
+#include "Action.h"
 
-State::State(const Board & m): Board(m)
+State::State(const Board & m) : Board(m)
 {
-  init();
+	init();
 }
 
-State::State(): Board(BOARD_DIMENSION, std::vector<CellState>(BOARD_DIMENSION, CellState::EMPTY))
+State::State() : Board(BOARD_DIMENSION, std::vector<CellState>(BOARD_DIMENSION, CellState::EMPTY))
 {
-    std::cout << "state constructed with empty state\n";
+	std::cout << "state constructed with empty state\n";
 }
 
-CapturedStones State::getCapturedstones(){
-  return capturedStones;
+CapturedStones State::getCapturedstones() {
+	return capturedStones;
 }
 
 // State::State(const State& ref){
@@ -30,50 +31,45 @@ CapturedStones State::getCapturedstones(){
 //   std::cout << "End of copy const for state\n";
 // }
 
-State State::operator+(Move m){
-  if(m.isPass()) return (*this);
-  State res(*this);
-  res(m.p.x, m.p.y) = m.getColour(); // TODO: update with state.nextPlayerToPlay
-  // res.nextPlayerToPlay = m.getColour() == BLACK ? WHITE : BLACK;
-  return res;
+State State::operator+(Action m) {
+	if (m.isPass()) return (*this);
+	State res(*this);
+	res(m.p.x, m.p.y) = m.getColour(); // TODO: update with state.nextPlayerToPlay
+									   // res.nextPlayerToPlay = m.getColour() == BLACK ? WHITE : BLACK;
+	return res;
 }
 
-State& State::operator+=(Move m){
-  if(m.isPass()) return (*this);
-  (*this)(m.p.x, m.p.y) = m.getColour();
-  // this->nextPlayerToPlay = m.getColour() == BLACK ? WHITE : BLACK;
-  return *this;
+State& State::operator+=(Action m) {
+	if (m.isPass()) return (*this);
+	(*this)(m.p.x, m.p.y) = m.getColour();
+	// this->nextPlayerToPlay = m.getColour() == BLACK ? WHITE : BLACK;
+	return *this;
 }
 
 
 CellState& State::operator() (int row, int col)
 {
-  if (row >= BOARD_DIMENSION || col >= BOARD_DIMENSION || row < 0 || col < 0)
-    std::__throw_invalid_argument("State subscript out of bounds"); // linux
-  // (*this)[col][row] = EMPTY;
-  return (*this)[row][col];
+	if (row >= BOARD_DIMENSION || col >= BOARD_DIMENSION || row < 0 || col < 0)
+		assert("State subscript out of bounds"); // linux
+																		// (*this)[col][row] = EMPTY;
+	return (*this)[row][col];
 }
 
 CellState State::operator() (int row, int col) const
 {
-  if (row >= BOARD_DIMENSION || col >= BOARD_DIMENSION || row < 0 || col < 0)
-    std::__throw_invalid_argument("State subscript out of bounds"); // linux
-  return (*this)[row][col];
+	if (row >= BOARD_DIMENSION || col >= BOARD_DIMENSION || row < 0 || col < 0)
+		assert("State subscript out of bounds"); // linux
+	return (*this)[row][col];
 }
 
-void State::init(){
-    this ->capturedStones.white=0;
-    this ->capturedStones.black=0;
+void State::init() {
+	this->capturedStones.white = 0;
+	this->capturedStones.black = 0;
 }
 
 void State::apply_action(Action action)             // apply certain action to this state.
 {
-  *this += action;
-}
-
-Result State::evalute()                              // return if WIN or LOSE - with respect to the AI.
-{
-  
+	*this += action;
 }
 
 State::~State() {}

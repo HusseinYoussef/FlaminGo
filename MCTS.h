@@ -12,30 +12,30 @@
 class MCTS
 {
 private:
-    LoopTimer timer;
-    int iterations;
-    float Policy(Node*,Node*);  //the policy of calculating the score of node.
-    static GoEngine engine;
+	LoopTimer timer;
+	int iterations;
+	float Policy(Node*, Node*);  //the policy of calculating the score of node.
+	static GoEngine engine;
 
-    // helpers
-    bool get_random_action(Action&);        // return false if no action found.
+	// helpers
+	bool get_random_action(Action&);        // return false if no action found.
 public:
 
-    float UCB1_C;           // Value of C in UCB1 function: sqrt(2), 2, 1.5
-    int max_iterations;     // max # of iteration to run MCTS
-    int max_millis;         // max time to run MCTS
-    int simulation_depth;   // max depth to run simulation
+	float UCB1_C;           // Value of C in UCB1 function: sqrt(2), 2, 1.5
+	int max_iterations;     // max # of iteration to run MCTS
+	int max_millis;         // max time to run MCTS
+	int simulation_depth;   // max depth to run simulation
 
-    MCTS();
-    //const LoopTimer& get_timer() const;
-    int get_iterations() const;
-    Node* get_best_child(Node*, float);
-    Node* get_most_visited_child(Node*);
-    Node* Select(Node*);
-    Node* Expand(Node*);
-    Result Simulate(State state, Action, Action);
-    void Propagate(Node*, Result);
-    Action run(State&, int);
+	MCTS();
+	//const LoopTimer& get_timer() const;
+	int get_iterations() const;
+	Node* get_best_child(Node*, float);
+	Node* get_most_visited_child(Node*);
+	Node* Select(Node*);
+	Node* Expand(Node*);
+	Result Simulate(State state, Action, Action);
+	void Propagate(Node*, Result);
+	Action run(State&, int);
 
-    ~MCTS();
+	~MCTS();
 };

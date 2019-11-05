@@ -1,20 +1,42 @@
-/*
-- Action is a move plus some agent parameters like (action prob, action cost, action heuristics, ...).
-- if you are talking about gameEngine, it just understands the move,
-  the agent take this move and convert it to action with some additional features.
-- for now, the action is just a move
-*/
+/* Represents the player move*/
 #pragma once
 #include "definitions.h"
 #include "Action.h"
-#include "Move.h"
 
-Action::Action(Move m) : Move(m)
+Action::Action(CellState player, int x, int y) : p(x, y)
 {
+	this->player = player;
 }
 
+Action::Action(CellState color) : p(-1, -1)
+{
+	this->player = color;
+}
 Action::Action() {}
 
+bool Action::isPass()
+{
+	return p.x == -1 && p.y == -1;
+}
+
+bool Action::set_Move(int x, int y)
+{
+	if (x < BOARD_DIMENSION && y < BOARD_DIMENSION)
+	{
+		this->p.x = x;
+		this->p.y = y;
+		return true;
+	}
+	return false;
+}
+Point Action::getMove()
+{
+	return this->p;
+}
+CellState Action::getColour()
+{
+	return this->player;
+}
 Action::~Action()
 {
 }

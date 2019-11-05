@@ -8,43 +8,43 @@
 #include <math.h>
 #include <algorithm>
 #include <initializer_list>
-
+#include "assert.h"
 
 
 #define BOARD_DIMENSION 13
 #define KOMI_VALUE 6.5
 
 // core declarations
-struct WhiteBlack{
-    int white, black;
-    WhiteBlack(int white, int black): white(white), black(black)
-    {}
-    WhiteBlack(): white(0), black(0)
-    {}
+struct WhiteBlack {
+	int white, black;
+	WhiteBlack(int white, int black) : white(white), black(black)
+	{}
+	WhiteBlack() : white(0), black(0)
+	{}
 };
 
 enum CellState {
-    EMPTY = 0,
-    WHITE = 1,
-    BLACK = -1,
+	EMPTY = 0,
+	WHITE = 1,
+	BLACK = -1,
 };
 
 enum Result
 {
-    WIN = 1,
-    LOSE = 0
+	WIN = 1,
+	LOSE = 0
 };
 
 enum Player
 {
-    AI_AGENT = 1,
-    OPPONENT = 0
+	AI_AGENT = 1,
+	OPPONENT = 0
 };
 
 
 struct Score : public WhiteBlack
 {
-    Score(int whiteScore, int blackScore) : WhiteBlack(whiteScore+KOMI_VALUE, blackScore) {}
+	Score(int whiteScore, int blackScore) : WhiteBlack(whiteScore + KOMI_VALUE, blackScore) {}
 
 };
 
