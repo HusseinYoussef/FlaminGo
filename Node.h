@@ -1,6 +1,7 @@
 #pragma once
 #include "definitions.h"
 #include "State.h"
+#include "GoEngine.h"
 
 // This class impelements the Node of Carloh Tree.
 class Node
@@ -13,6 +14,8 @@ class Node
     int visits_count;		// number of times this Node has been visited
     int wins;               // number of wins.
     int depth;              // the depth of this Node
+    static GoEngine engine;
+    CellState current_color;
 
     std::vector< Node* > children;	            // all current children
     std::vector< Action > actions;		        // possible actions from this state
@@ -38,7 +41,10 @@ class Node
     bool is_fully_expanded() const { return !children.empty() && actions.empty(); }
 
     // does this Node end the search (i.e. the game)
-    bool is_terminal() const { return state.is_terminal(); }
+    bool is_terminal() const {
+        return engine.isGoal(state, action, parent->action);
+        //return state.is_terminal(); 
+        }
 
     // number of times this Node has been visited
     int get_num_visits() const { return visits_count; }
@@ -58,3 +64,8 @@ class Node
     Node* get_parent() const { return parent; }
 
 };
+/*
+This part will be instead of state.evaluate.
+Score score = engine.computeScore(currentState);
+return score.white > score.black ? (WIN)
+/*

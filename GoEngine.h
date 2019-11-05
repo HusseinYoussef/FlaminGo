@@ -29,6 +29,6 @@ public:
     int removeCaptured(State & state,Point point,CellState color); // take the player stone's color
     bool isKo(const State& currentState,const State& prevState);
     bool isGoal(const State &currentState, Move currentMove, Move prevMove);
-    std::vector<Move> getValidMoves(State state,State prevState,CellState nextColourToPlay);
+    std::vector<Move> getValidMoves(const State* state,const State* prevState,CellState nextColourToPlay);
     ~GoEngine();
 };

@@ -12,7 +12,7 @@ MCTS :: MCTS()
     max_millis = 0;
     simulation_depth = 100;
 }
-
+GoEngine MCTS::engine = GoEngine();
 int MCTS :: get_iterations() const
 {
     return iterations;
@@ -95,19 +95,18 @@ Node* MCTS :: Expand(Node* node)
 }
 
 //Simulate, Apply random actions till the game ends(win or lose)
-result MCTS :: Simulate(State state)
+result MCTS :: Simulate(State state,Action action,Action prev_action)
 {
-    if(!state.is_terminal())
+    if(!engine.isGoal(state,action,prev_action))
     {
-        Action action;
         for(int d = 0; d < simulation_depth; ++d)
         {
-            if(state.is_terminal())
+            if(engine.isGoal(state,action,prev_action))
             {
                 break;
             }
-
-            if(state.get_random_action(action))
+            prev_action = action
+            if(engine.get_random_action(action))
             {
                 state.apply_action(action);
             }
@@ -164,7 +163,7 @@ Action MCTS :: run( State& current_state, int seed = 1)
         State state(node->get_state());
 
         // 3. Simulate
-        result reward = Simulate(state);
+        result reward = Simulate(state,node->get_action(),node->get_parent->get_action());
 
         //if(explored_states) explored_states->push_back(state);
 

@@ -11,6 +11,10 @@ Node::Node(State& state, Node* parent = NULL):
                 wins(0),
                 depth(parent ? parent->depth + 1 : 0)
 {}
+
+//All nodes share the same game engine.
+GoEngine Node::engine = GoEngine();
+
 Node* Node::expand()
 {
     // First check if this Node is fully expanded or not.
@@ -20,7 +24,8 @@ Node* Node::expand()
     if(children.empty()){
 
         // Get the list of actions that this Node can do.
-        state.get_actions(actions);
+        actions = engine.getValidMoves(&state,(parent == NULL? NULL:& (parent->state) ), current_color);
+        //state.get_actions(actions);
         // Shuffle these actions. To randomly pick a child.
         std::random_shuffle(actions.begin(),actions.end());  // This part will change when ML comes.
     }

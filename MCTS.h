@@ -6,6 +6,7 @@
 #include "State.h"
 #include "Action.h"
 #include <vector>
+#include "GoEngine.h"
 
 // Monte Carlo Tree Search class
 class MCTS
@@ -14,6 +15,7 @@ private:
     LoopTimer timer;
     int iterations;
     float Policy(Node*,Node*);  //the policy of calculating the score of node.
+    const GoEngine engine;
 
 public:
 
@@ -29,7 +31,7 @@ public:
     Node* get_most_visited_child(Node*);
     Node* Select(Node*);
     Node* Expand(Node*);
-    result Simulate(State state);
+    result Simulate(State state, Action, Action);
     void Propagate(Node*, result);
     Action run(State&, int);
 

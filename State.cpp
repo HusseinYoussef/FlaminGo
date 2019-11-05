@@ -33,6 +33,12 @@ State State::operator+(Move m){
   return res;
 }
 
+State& State::operator+=(Move m){
+  if(m.isPass()) return (*this);
+  (*this)(m.p.x, m.p.y) = m.getColour();
+  return *this;
+}
+
 
 CellState& State::operator() (int row, int col)
 {
@@ -55,17 +61,17 @@ void State::init(){
 }
 
 // TODO : Link This functions with the game engine.
-bool State::is_terminal() const                       // check if this state is terminal state or not. (e.g. end of the game).
-{
+// bool State::is_terminal() const                       // check if this state is terminal state or not. (e.g. end of the game).
+// {
 
-}
-bool State::get_random_action(Action& action)        // return false if no action found.
-{
+// }
+// bool State::get_random_action(Action& action)        // return false if no action found.
+// {
 
-}
+// }
 result State::evalute()                              // return if WIN or LOSE - with respect to the AI.
 {
-
+  
 }
 void State::get_actions(vector<Action>& actions)     // Add all possible actions to the passed vector.
 {
@@ -73,7 +79,7 @@ void State::get_actions(vector<Action>& actions)     // Add all possible actions
 }
 void State::apply_action(Action action)             // apply certain action to this state.
 {
-
+  *this += action;
 }
 
 State::~State() {}
