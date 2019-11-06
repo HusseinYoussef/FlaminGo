@@ -15,8 +15,8 @@ public:
 	Action(CellState player, Point p);
 	Action(CellState player); // pass move
 	bool set_Move(int x, int y);
-	Point getMove();
-	CellState getColour();
-	bool isPass();
+	Point getMove() const;
+	CellState getColour() const;
+	bool isPass() const;
 	~Action();
 };

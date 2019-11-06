@@ -10,7 +10,7 @@ private:
 	Player player;  // The player who made the move to this state.
 					// CellState nextPlayerToPlay; // the color of next player to play, initial state will be white and alternate every time
 public:
-	CapturedStones getCapturedstones();
+	CapturedStones getCapturedstones() const;
 	State(const Board & m, int capturedByBlack, int capturedByWhite);
 	State(const Board & m);
 	State();
@@ -18,11 +18,11 @@ public:
 	CellState& operator() (int row, int col);
 	CellState operator() (int row, int col) const;
 	State operator+(Action m);
-	State& State::operator+=(Action m);
+	State& operator+=(const Action& m);
+	State& operator-=(const Action& m);
 	void setCapturedStones(int white, int black);
 	// H&H
-	//bool is_terminal() const;                     // check if this state is terminal state or not. (e.g. end of the game).
-	Result evalute();                       // return if WIN or LOSE - with respect to the AI.
+	// Result evalute();                       // return if WIN or LOSE - with respect to the AI.
 											//void get_actions(vector<Action>&);      // Add all possible actions to the passed vector.         // CHANGED TO GAME ENGINE.
 	void apply_action(Action);              // apply certain action to this state.
 	Player get_player() const { return player; }

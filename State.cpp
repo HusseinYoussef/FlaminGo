@@ -1,5 +1,4 @@
 /* Represents the Go game state */
-#pragma once
 #include "definitions.h"
 #include "State.h"
 #include "Action.h"
@@ -14,7 +13,7 @@ State::State() : Board(BOARD_DIMENSION, std::vector<CellState>(BOARD_DIMENSION, 
 	std::cout << "state constructed with empty state\n";
 }
 
-CapturedStones State::getCapturedstones() {
+CapturedStones State::getCapturedstones() const{
 	return capturedStones;
 }
 
@@ -39,9 +38,16 @@ State State::operator+(Action m) {
 	return res;
 }
 
-State& State::operator+=(Action m) {
+State& State::operator+=(const Action& m) {
 	if (m.isPass()) return (*this);
 	(*this)(m.p.x, m.p.y) = m.getColour();
+	// this->nextPlayerToPlay = m.getColour() == BLACK ? WHITE : BLACK;
+	return *this;
+}
+
+State& State::operator-=(const Action& m) {
+	if (m.isPass()) return (*this);
+	(*this)(m.p.x, m.p.y) = EMPTY;
 	// this->nextPlayerToPlay = m.getColour() == BLACK ? WHITE : BLACK;
 	return *this;
 }

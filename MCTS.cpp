@@ -1,5 +1,3 @@
-#pragma once
-
 #include "definitions.h"
 #include "MCTS.h"
 #include "assert.h"
@@ -107,7 +105,7 @@ Result MCTS::Simulate(State state, Action action, Action prev_action)
 				break;
 			}
 			prev_action = action;
-			if (engine.getRandomAction(action, state, prevState)) // TODO: interface correct and send missing params
+			if (engine.getRandomAction(action, &state, &prevState, CellState::EMPTY)) // TODO: interface correct and send missing params
 			{
 				state.apply_action(action);
 			}
@@ -127,8 +125,12 @@ Result MCTS::Simulate(State state, Action action, Action prev_action)
 	state.apply_action(action);
 	}
 	*/
-
-	return state.evalute();     // WIN or LOSE.
+	CellState (*function_that_get_AI_COLOR)(); // TODO: implement this function
+	Score score = engine.computeScore(state);
+	bool isWhiteLarger = score.white > score.black;
+	bool iAmWhite = function_that_get_AI_COLOR() == WHITE;
+	return isWhiteLarger == iAmWhite ? WIN : LOSE;
+	// return state.evalute();     // WIN or LOSE.
 }
 
 //Back Propagation, Update the path of hte node

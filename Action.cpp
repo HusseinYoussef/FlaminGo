@@ -1,5 +1,4 @@
 /* Represents the player move*/
-#pragma once
 #include "definitions.h"
 #include "Action.h"
 
@@ -14,7 +13,7 @@ Action::Action(CellState color) : p(-1, -1)
 }
 Action::Action() {}
 
-bool Action::isPass()
+bool Action::isPass() const
 {
 	return p.x == -1 && p.y == -1;
 }
@@ -29,11 +28,11 @@ bool Action::set_Move(int x, int y)
 	}
 	return false;
 }
-Point Action::getMove()
+Point Action::getMove() const
 {
 	return this->p;
 }
-CellState Action::getColour()
+CellState Action::getColour() const
 {
 	return this->player;
 }

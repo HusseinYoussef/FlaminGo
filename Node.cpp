@@ -1,4 +1,3 @@
-#pragma once
 #include "definitions.h"
 #include "Node.h"
 #include "assert.h"

@@ -1,4 +1,3 @@
-#pragma once
 #include "definitions.h"
 #include "GoEngine.h"
 
@@ -152,6 +151,23 @@ bool GoEngine::isValidMove(State state, const State& prevState, Action move) {
 	return !isSelfCapture(state, move.p, move.getColour()); // the state passed here is the state after move played
 }
 
+bool GoEngine::isValidMove(const State* state, const State* prevState, Action move) {
+	// occupied point
+	if ((*state)(pxy(move)) != int(CellState::EMPTY)) return false;
+	if (!isOnBoard(move.p)) return false;
+	if (move.isPass()) return true;
+	State newState(*state);
+	newState += move;
+	std::cout << "state after placing move " << (*state)(12, 0) << '\n';
+	int numCaptured = removeCaptured(newState, move.p, move.getColour());
+	if (numCaptured > 0) {
+		std::cout << "numCaptured: " << numCaptured << "\n";
+		if (prevState == NULL) return true;
+		return !isKo(newState, *prevState);
+	}
+	return !isSelfCapture(newState, move.p, move.getColour()); // the state passed here is the state after move played
+}
+
 bool GoEngine::isKo(const State& currentState, const State& prevState) {
 	for (int i = 0; i<BOARD_DIMENSION; i++) {
 		for (int j = 0; j<BOARD_DIMENSION; j++) {
@@ -178,12 +194,11 @@ bool GoEngine::isGoal(const State &currentState, Action currentMove, Action prev
 }
 
 std::vector<Action> GoEngine::getValidMoves(const State *_state, const State* _prevState, CellState nextColourToPlay) {
-	const State &state = *_state, &prevState = *_prevState;
 	std::vector<Action> validMoves;
 	for (int i = 0; i<BOARD_DIMENSION; i++) {
 		for (int j = 0; j<BOARD_DIMENSION; j++) {
 			Action currentMove(nextColourToPlay, i, j);
-			if (isValidMove(state, prevState, currentMove))
+			if (isValidMove(_state, _prevState, currentMove))
 				validMoves.push_back(currentMove);
 		}
 	}
@@ -287,7 +302,7 @@ int GoEngine::removeCaptured(State &state, Point point, CellState color)
 //   // checkTerritory(move.p.x, move.p.y, currentState);
 // }
 
-Score GoEngine::computeScore(State state) {
+Score GoEngine::computeScore(const State& state) {
 	int blackStones = 0;
 	int whiteStones = 0;
 	int blackTerr = 0;

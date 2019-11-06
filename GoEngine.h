@@ -17,14 +17,16 @@ private:
 	bool isValidMove_stateUpdated(State state, const State& prevState, Action move);
 	int removeCapturedHelper(State & state, Point point, CellState color);
 	void checkTerritory(int x, int y, const State &state, TerritoryMat& territories);
+	// bool isValidMove_ignoreKO(State* state, const State* prevState, Action move)
 public:
 	// constructor
 	GoEngine();
 
 	// basic functions
-	Score computeScore(State state);
+	Score computeScore(const State& state);
 	bool isGoal(const State &currentState, Action currentMove, Action prevMove);
 	bool isValidMove(State state, const State& prevState, Action move);
+	bool isValidMove(const State* state, const State* prevState, Action move);
 	std::vector<Action> getValidMoves(const State* state, const State* prevState, CellState nextColourToPlay);
 
 	// may be used
