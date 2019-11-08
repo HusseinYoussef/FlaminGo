@@ -7,7 +7,7 @@ MCTS::MCTS()
 	iterations = 0;
 	UCB1_C = sqrt(2);
 	max_iterations = 100;
-	max_millis = 0;
+	max_millis = 100 * 1000;  // MUST BE CHANGED.
 	simulation_depth = 100;
 }
 GoEngine MCTS::engine = GoEngine();
@@ -85,6 +85,7 @@ Node* MCTS::Select(Node* node)
 // Expand, Expand by adding single child (if not terminal or not fully expanded)
 Node* MCTS::Expand(Node* node)
 {
+	assert(node != NULL);
 	if (!node->is_fully_expanded() && !node->is_terminal())
 	{
 		node = node->expand();
@@ -93,9 +94,9 @@ Node* MCTS::Expand(Node* node)
 }
 
 //Simulate, Apply random actions till the game ends(win or lose)
-Result MCTS::Simulate(State state, Action action, Action prev_action)
+Result MCTS::Simulate(State state,State prev_state, Action action, Action prev_action)
 {
-	State prevState = state; // TODO, save the prev state so that you can able to get a random 'valid' move
+
 	if (!engine.isGoal(state, action, prev_action))
 	{
 		for (int d = 0; d < simulation_depth; ++d)
@@ -105,8 +106,9 @@ Result MCTS::Simulate(State state, Action action, Action prev_action)
 				break;
 			}
 			prev_action = action;
-			if (engine.getRandomAction(action, &state, &prevState, CellState::EMPTY)) // TODO: interface correct and send missing params
+			if (engine.getRandomAction(action, &state, &prev_state,Switch(state.get_color()))) // TODO: interface correct and send missing params [DONE]
 			{
+				prev_state = state;
 				state.apply_action(action);
 			}
 			else
@@ -125,11 +127,16 @@ Result MCTS::Simulate(State state, Action action, Action prev_action)
 	state.apply_action(action);
 	}
 	*/
-	CellState (*function_that_get_AI_COLOR)(); // TODO: implement this function
+/*
+	CellState (*function_that_get_AI_COLOR)();
+
 	Score score = engine.computeScore(state);
 	bool isWhiteLarger = score.white > score.black;
 	bool iAmWhite = function_that_get_AI_COLOR() == WHITE;
 	return isWhiteLarger == iAmWhite ? WIN : LOSE;
+	*/
+	Score score = engine.computeScore(state);
+	return (score.white > score.black? WIN:LOSE);   // WARNING. we here assume that the AI_AGENT color is white.
 	// return state.evalute();     // WIN or LOSE.
 }
 
@@ -159,19 +166,22 @@ Action MCTS::run(State& current_state, int seed = 1)
 
 		// 1. SELECT
 		Node* node = Select(&root_node);
-
+        //puts("Node selected successfully.");
 		// 2. Expand
 		node = Expand(node);
+		//puts("Node expanded successfully.");
 
 		State state(node->get_state());
 
-		// 3. Simulate
-		Result reward = Simulate(state, node->get_action(), node->get_parent()->get_action());
-
+		// 3. Simulate   // NOTE: the parent node will never = NULL, as the concept of expanding prevent that from happening.
+		Result reward = Simulate(state,node->get_parent()==NULL? state:node->get_parent()->get_state(), node->get_action(), node->get_parent()->get_action());
+        //puts("Got the reward successfully.");
 		//if(explored_states) explored_states->push_back(state);
 
 		// 4. BACK PROPAGATION
 		Propagate(node, reward);
+		//puts("Propagation is done successfully.");
+
 
 		best_node = get_most_visited_child(&root_node);
 
@@ -181,6 +191,7 @@ Action MCTS::run(State& current_state, int seed = 1)
 		// exit loop if current iterations exceeds max_iterations
 		if (max_iterations > 0 && iterations > max_iterations) break;
 		iterations++;
+		//cout << "simulation number " << iterations << " done.\n";
 	}
 
 	// Return the action to the best node

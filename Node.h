@@ -10,12 +10,12 @@ private:
 	State state;		// the state of this Node
 	Action action;	// the action which led to the state of this Node
 	Node* parent;		    // parent of this TreeNode
-	Player player;		    	// player who made the decision
 	int visits_count;		// number of times this Node has been visited
 	int wins;               // number of wins.
 	int depth;              // the depth of this Node
 	static GoEngine engine;
-	CellState current_color;
+	//Player player;		    	// player who made the decision. [USELESS DATA]
+	//CellState color;	// The color which made the decision. [Instead of player].
 
 	std::vector< Node* > children;	            // all current children
 	std::vector< Action > actions;		        // possible actions from this state
@@ -41,9 +41,10 @@ public:
 	bool is_fully_expanded() const { return !children.empty() && actions.empty(); }
 
 	// does this Node end the search (i.e. the game)
-	bool is_terminal() const {
-		return engine.isGoal(state, action, parent->action);
-		//return state.is_terminal(); 
+	bool is_terminal() {
+	    Action tmp(Switch(state.get_color()),-2,-2);
+		return engine.isGoal(state, action, parent == NULL? tmp:parent->get_action());
+		//return state.is_terminal();
 	}
 
 	// number of times this Node has been visited
@@ -62,6 +63,8 @@ public:
 
 	// get parent
 	Node* get_parent() const { return parent; }
+
+
 
 };
 /*

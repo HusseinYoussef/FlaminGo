@@ -33,7 +33,7 @@ CapturedStones State::getCapturedstones() const{
 State State::operator+(Action m) {
 	if (m.isPass()) return (*this);
 	State res(*this);
-	res(m.p.x, m.p.y) = m.getColour(); // TODO: update with state.nextPlayerToPlay
+	res(m.p.x, m.p.y) = m.getColour(); // TODO: update with state.nextPlayerToPlay [DONE in apply_action]
 									   // res.nextPlayerToPlay = m.getColour() == BLACK ? WHITE : BLACK;
 	return res;
 }
@@ -75,7 +75,21 @@ void State::init() {
 
 void State::apply_action(Action action)             // apply certain action to this state.
 {
+	//cout << "The Action: " << action.p.x << " " << action.p.y << endl;
+	//cout << "SHOULD BE APPLIED " << action;
 	*this += action;
+	// when the state changes, the color is toggled.
+	this->color = Switch(this->color);
+}
+ostream& operator<<(ostream &out,const State& state)
+{
+	out << "The current Board:\n";
+	char arr[] = {'B','.','W'};
+	for(int i=0;i<BOARD_DIMENSION;++i)
+		for(int j = 0;j<BOARD_DIMENSION;++j)
+			out << arr[state(i,j)+1] << " \n"[j==BOARD_DIMENSION-1];
+	out << "Last Color played: " << (state.color==WHITE? "WHITE" : "BLACK") <<"\n";
+	return out;
 }
 
 State::~State() {}

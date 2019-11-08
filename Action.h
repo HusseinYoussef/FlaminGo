@@ -2,6 +2,7 @@
 #pragma once
 #include "definitions.h"
 #include "Point.h"
+using namespace std;
 class Action
 {
 private:
@@ -18,5 +19,7 @@ public:
 	Point getMove() const;
 	CellState getColour() const;
 	bool isPass() const;
+    friend ostream& operator<<(ostream& os, const Action& action);
+
 	~Action();
 };

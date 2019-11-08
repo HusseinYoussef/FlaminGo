@@ -6,6 +6,7 @@
 #include "State.h"
 #include "Action.h"
 #include <vector>
+
 #include "GoEngine.h"
 
 // Monte Carlo Tree Search class
@@ -27,13 +28,13 @@ public:
 	int simulation_depth;   // max depth to run simulation
 
 	MCTS();
-	//const LoopTimer& get_timer() const;
+	const LoopTimer& get_timer() const;
 	int get_iterations() const;
 	Node* get_best_child(Node*, float);
 	Node* get_most_visited_child(Node*);
 	Node* Select(Node*);
 	Node* Expand(Node*);
-	Result Simulate(State state, Action, Action);
+	Result Simulate(State, State, Action, Action);
 	void Propagate(Node*, Result);
 	Action run(State&, int);
 

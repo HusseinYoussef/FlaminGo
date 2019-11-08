@@ -11,7 +11,8 @@ Action::Action(CellState color) : p(-1, -1)
 {
 	this->player = color;
 }
-Action::Action() {}
+Action::Action() : p(-1,-1)
+{}
 
 bool Action::isPass() const
 {
@@ -35,6 +36,11 @@ Point Action::getMove() const
 CellState Action::getColour() const
 {
 	return this->player;
+}
+ostream& operator<<(ostream &out,const Action& action)
+{
+	out << "The Action is: " << action.p.x << " " << action.p.y << endl;
+	return out;
 }
 Action::~Action()
 {

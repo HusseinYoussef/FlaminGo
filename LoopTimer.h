@@ -4,6 +4,8 @@
 #include <ctime>
 #include <thread>
 #include <cstdlib>
+#include <iostream>
+
 
 class LoopTimer
 {

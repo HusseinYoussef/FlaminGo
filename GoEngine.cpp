@@ -83,7 +83,7 @@ void GoEngine::checkTerritory(int x, int y, const State &state, TerritoryMat& te
 	std::stack<Point> newVisited;
 	// bool say visited or not, if visited cellState define its status (BLACK=> black territory,WHITE=>white territory, EMPTY=> not for any one territory)
 	s.push(Point(x, y));
-	std::cout << "stack is good\n";
+	//std::cout << "stack is good\n";
 	// territories[x][y] = Territory(true, EMPTY);
 
 	bool emptyTerritory = false;
@@ -142,7 +142,7 @@ bool GoEngine::isValidMove(State state, const State& prevState, Action move) {
 	if (!isOnBoard(move.p)) return false;
 	if (move.isPass()) return true;
 	state = state + move;
-	std::cout << "state after placing move " << state(12, 0) << '\n';
+	//std::cout << "state after placing move " << state(12, 0) << '\n';
 	int numCaptured = removeCaptured(state, move.p, move.getColour());
 	if (numCaptured > 0) {
 		std::cout << "numCaptured: " << numCaptured << "\n";
@@ -158,10 +158,10 @@ bool GoEngine::isValidMove(const State* state, const State* prevState, Action mo
 	if (move.isPass()) return true;
 	State newState(*state);
 	newState += move;
-	std::cout << "state after placing move " << (*state)(12, 0) << '\n';
+	//std::cout << "state after placing move " << (*state)(12, 0) << '\n';
 	int numCaptured = removeCaptured(newState, move.p, move.getColour());
 	if (numCaptured > 0) {
-		std::cout << "numCaptured: " << numCaptured << "\n";
+		//std::cout << "numCaptured: " << numCaptured << "\n";
 		if (prevState == NULL) return true;
 		return !isKo(newState, *prevState);
 	}
@@ -249,9 +249,9 @@ int GoEngine::removeCapturedHelper(State &state, Point point, CellState color)
 		for (int i = 0; i < 4; i++)
 		{
 			Point adj = currentPoint + ADJ_OFFSETS[i];
-			if (adj.x == 12 && adj.y == 0) std::cout << "this is loai " << currentPoint.x << ", " << currentPoint.y << "\n";
+			//if (adj.x == 12 && adj.y == 0) std::cout << "this is loai " << currentPoint.x << ", " << currentPoint.y << "\n";
 			if (!isOnBoard(adj)) continue;
-			std::cout << "adj: " << adj.x << ", " << adj.y << "\n";
+			//std::cout << "adj: " << adj.x << ", " << adj.y << "\n";
 			if (visited[adj.x][adj.y]) // if it is visited (already pushed before in this function call) or out of boarder, don't process it
 				continue;
 
@@ -271,7 +271,7 @@ int GoEngine::removeCapturedHelper(State &state, Point point, CellState color)
 	{
 		Point currentPoint = pointsToRemove.top();
 		pointsToRemove.pop();
-		std::cout << "this point is captured: " << currentPoint.x << ", " << currentPoint.y << "\n";
+		//std::cout << "this point is captured: " << currentPoint.x << ", " << currentPoint.y << "\n";
 		state(currentPoint.x, currentPoint.y) = EMPTY;
 	}
 	return numCaptured;
@@ -332,7 +332,7 @@ Score GoEngine::computeScore(const State& state) {
 			}
 		}
 	}
-	std::cout << "territories[12][0]:" << territories[12][0].first << std::endl;
+	//std::cout << "territories[12][0]:" << territories[12][0].first << std::endl;
 	auto capturedStones = state.getCapturedstones();
 	return Score(whiteStones + whiteTerr + capturedStones.black, blackStones + blackTerr + capturedStones.white); // TODO: add captured
 }
@@ -355,7 +355,8 @@ bool GoEngine::getRandomAction(Action& result, const State* state, const State* 
 	std::mt19937 rng(dev());
 	std::uniform_int_distribution<std::mt19937::result_type> distribution(0, moves.size()); // distribution in range [1, 6]
 	auto sample = distribution(rng);
-
+	sample%=moves.size();
+    //cout << moves[sample];
 	result = moves[sample];
 	return true;
 }

@@ -11,6 +11,7 @@
 #include "assert.h"
 
 
+
 #define BOARD_DIMENSION 13
 #define KOMI_VALUE 6.5
 
@@ -28,6 +29,9 @@ enum CellState {
 	WHITE = 1,
 	BLACK = -1,
 };
+
+// This function switch the color depending on the current color.
+#define Switch(current_color) (current_color == WHITE? BLACK:WHITE)
 
 enum Result
 {

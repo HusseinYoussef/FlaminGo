@@ -1,15 +1,36 @@
 #include "definitions.h"
 #include "GoEngine.h"
+#include <time.h>
+#include "MCTS.h"
 using namespace std;
 void test1();
 void test2();
+void test3();
 
 int main()
 {
-	test2();
+	test3();
 	return 0;
 }
 
+void test3()
+{
+	State state;
+	CellState arr[] = {WHITE,BLACK,EMPTY};
+	srand(time(NULL));
+	for(int i=0;i<BOARD_DIMENSION;++i)
+		for(int j = 0;j<BOARD_DIMENSION;++j)
+			state(i,j) = arr[ rand()%3 ];
+	cout << state << endl;
+	puts("Applying MCTS..");
+	MCTS carloh;
+	Action act = carloh.run(state,1);
+	puts("Done.");
+	cout << "Best Move: " << act << endl;
+	puts("-----------------------------------");
+	state.apply_action(act);
+	cout << state << endl;
+}
 
 void test1() {
 	GoEngine engine;

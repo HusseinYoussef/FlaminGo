@@ -5,7 +5,6 @@ Node::Node(State& state, Node* parent = NULL) :
 	state(state),
 	action(),
 	parent(parent),
-	player(state.get_player()),
 	visits_count(0),
 	wins(0),
 	depth(parent ? parent->depth + 1 : 0)
@@ -23,7 +22,9 @@ Node* Node::expand()
 	if (children.empty()) {
 
 		// Get the list of actions that this Node can do.
-		actions = engine.getValidMoves(&state, (parent == NULL ? NULL : &(parent->state)), current_color);
+		actions = engine.getValidMoves(&state, (parent == NULL ? NULL : &(parent->state)), Switch(state.get_color()));
+		//puts("List of Valid Actions");
+		//for(auto x:actions) cout << x;
 		//state.get_actions(actions);
 		// Shuffle these actions. To randomly pick a child.
 		std::random_shuffle(actions.begin(), actions.end());  // This part will change when ML comes.
@@ -31,7 +32,8 @@ Node* Node::expand()
 
 	// If there is no actions, then this Node is a terminal Node, and u shouldn't be here!
 	assert("ERROR! the Node have no actions to perform and classified as normal Node not terminal node" && !actions.empty());
-
+	//cout << "The size of the actions I have: " << actions.size() << endl;
+    //puts("will add child now and the action is");
 	Node* child = add_child(actions.back()); // NOTE: for every call of function "expand",this function will
 	actions.pop_back();
 	return child;
